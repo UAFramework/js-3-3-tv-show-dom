@@ -6,15 +6,16 @@ A starting point for CYF's TV show DOM project
 - Fork this repo
 - Create a branch called `for-review`, push it into your github and create PR into `upstream/main`
 - For each level you will be branching out from the `for-review`
-- For `Level 100`: 
-    -- Branch out from `for-review` into `feature/level-100`
-    -- Use vscode to edit your local copy of the project
-    -- Once `Level 100` is done and you are happy with the result, checkout into `for-review` and do 
-    ```shell
-        git merge feature/level-100 --squash
-    ```
-    -- Push `for-review` into your github
-- Repeat above step for the next level.
+- For `Level 100`:
+    <ul>
+        <li>Branch out from <b>for-review</b> into <b>feature/level-100</b></li>
+        <li>Use vscode to edit your local copy of the project</b></li>
+        <li>Once <b>Level 100</b> is done and you are happy with the result, checkout into <b>for-review</b> and do:<br/>
+            <code>git merge feature/level-100 --squash</code>
+        </li>
+        <li>Push <b>for-review</b> into your github</li>
+    </ul>
+- Repeat above step for each of the next levels.
 
 ## Task Instructions:
 - Start with [Level 100](https://syllabus.codeyourfuture.io/js-core-3/tv-show-dom-project/level-100)
