@@ -1,3 +1,31 @@
+body {
+  background-color: lightgray;
+}
+
 #root {
-  color: red;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.episode {
+  flex: 1 0 25%;
+  margin: 1%;
+  margin-left: 2%;
+  text-align: center;
+  background-color: white;
+  border-radius: 0.5em;
+  
+}
+
+.episode h3 {
+  margin: 0;
+  margin-bottom: 1em;
+  padding: 1em;
+  border: 0.1em black solid;
+  border-radius: 0.5em;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.episode p {
+  color: rgb(117, 114, 114);
 }
