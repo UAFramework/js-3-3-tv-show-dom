@@ -10,11 +10,9 @@ body {
 .episode {
   flex: 1 0 25%;
   margin: 1%;
-  margin-left: 2%;
   text-align: center;
   background-color: white;
   border-radius: 0.5em;
-  
 }
 
 .episode h3 {
@@ -28,4 +26,23 @@ body {
 
 .episode p {
   color: rgb(117, 114, 114);
+  padding: 1em;
+}
+
+#search {
+  margin: 1%;
+  margin-top: 2%;
+}
+
+#input {
+  padding: 0.8em;
+  border-color: rgb(209, 202, 202);
+  border-radius: 0.5em;
+
+}
+
+#search label {
+  color: rgb(83, 82, 82);
+  margin-left: 1em;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }

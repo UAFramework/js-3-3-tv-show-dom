@@ -24,7 +24,27 @@ function makePageForEpisodes(episodeList) {
 
     div.append(h3, img, p);
     rootElem.appendChild(div);
+
+    const label = document.querySelector("label");
+    label.textContent = `Displaying ${getAllEpisodes().length}/${getAllEpisodes().length} episodes`;
   })
 }
 
 window.onload = setup;
+
+function searchEpisode (value) {
+  const rootElem = document.getElementById("root");
+  rootElem.replaceChildren();
+
+  const label = document.querySelector("label");
+
+  const filteredEpisodes = getAllEpisodes().filter(episode =>
+    episode.name.toLowerCase().includes(value.toLowerCase()) || episode.summary.toLowerCase().includes(value.toLowerCase())
+  );
+
+  return makePageForEpisodes(filteredEpisodes),
+  label.textContent = `Displaying ${filteredEpisodes.length}/${getAllEpisodes().length} episodes`;
+}
+
+const input = document.querySelector("#input");
+input.addEventListener("input", () => searchEpisode(input.value));
