@@ -1,10 +1,11 @@
 window.onload = setup;
 
 function setup() {
-  fetchEpisodesData()
+  fetchEpisodesData(getAllShows().sort((a, b) => a.name.localeCompare(b.name))[0].id)
     .then(() => {
       makePageForEpisodes(allEpisodesArray);
       createEpisodesDropList(allEpisodesArray);
+      createShowsDroplist(getAllShows());
     })
     .catch(error => {
       console.error("Error:", error);
@@ -12,9 +13,9 @@ function setup() {
 }
 
 let allEpisodesArray;
-async function fetchEpisodesData() {
+async function fetchEpisodesData(showId) {
   try {
-    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+    const response = await fetch(`https://api.tvmaze.com/shows/${showId}/episodes`);
     allEpisodesArray = await response.json();
     return allEpisodesArray;
   } catch (error) {
@@ -23,20 +24,21 @@ async function fetchEpisodesData() {
   }
 }
 
+function setSeasonAndEpisodeNumber (season, episode) {
+  return `${(season < 10 ? "S0"+season : "S"+season)
+    +(episode < 10 ? "E0"+episode : "E"+episode)}`
+}
+
 function makePageForEpisodes(episodeList) {
   const rootElem = document.getElementById("root");
 
   return episodeList.map(episode => {
     const div = document.createElement("div");
     div.classList.add("episode");
-    div.setAttribute("id", `${episode.number < 10
-      ? "S0"+episode.season+"E0"+episode.number 
-      : "S0"+episode.season+"E"+episode.number}`);
+    div.setAttribute("id", setSeasonAndEpisodeNumber(episode.season, episode.number));
 
     const h3 = document.createElement("h3");
-    h3.textContent = `${episode.name} - ${episode.number < 10
-      ? "S0"+episode.season+"E0"+episode.number 
-      : "S0"+episode.season+"E"+episode.number}`;
+    h3.textContent = `${episode.name} - ${setSeasonAndEpisodeNumber(episode.season, episode.number)}`;
 
     const img = document.createElement("img");
     img.src = episode.image.medium;
@@ -47,7 +49,7 @@ function makePageForEpisodes(episodeList) {
     div.append(h3, img, p);
     rootElem.appendChild(div);
 
-    const label = document.querySelector("label");
+    const label = document.querySelector("#inputLabel");
     label.textContent = `Displaying ${episodeList.length}/${allEpisodesArray.length} episodes`;
   })
 }
@@ -56,7 +58,7 @@ function searchEpisodeByKeyword (value) {
   const rootElem = document.getElementById("root");
   rootElem.replaceChildren();
 
-  const label = document.querySelector("label");
+  const label = document.querySelector("#inputLabel");
 
   const filteredEpisodes = allEpisodesArray.filter(episode =>
     episode.name.toLowerCase().includes(value.toLowerCase()) || episode.summary.toLowerCase().includes(value.toLowerCase())
@@ -67,30 +69,29 @@ function searchEpisodeByKeyword (value) {
 }
 
 function createEpisodesDropList (episodeList) {
+  const select = document.querySelector("#episodesDroplist");
+  select.replaceChildren();
+
   return episodeList.map(episode => {
-    const select = document.querySelector("select");
-
     const option = document.createElement("option");
-    option.value = `${episode.number < 10
-      ? "S0"+episode.season+"E0"+episode.number 
-      : "S0"+episode.season+"E"+episode.number}`;
-
-    option.textContent = `${episode.number < 10
-      ? "S0"+episode.season+"E0"+episode.number 
-      : "S0"+episode.season+"E"+episode.number} - ${episode.name}`;
+    option.value = setSeasonAndEpisodeNumber(episode.season, episode.number);
+    option.textContent = `${setSeasonAndEpisodeNumber(episode.season, episode.number)} - ${episode.name}`;
     
     select.appendChild(option);
-
-    //First attempt with anchors
-    // const episodeLink = document.createElement("a");
-    // episodeLink.href = `#${episode.number < 10
-    //   ? "S0"+episode.season+"E0"+episode.number 
-    //   : "S0"+episode.season+"E"+episode.number}`;
-
-    // episodeLink.textContent = `${episode.number < 10
-    //   ? "S0"+episode.season+"E0"+episode.number 
-    //   : "S0"+episode.season+"E"+episode.number} - ${episode.name}`;    
     });
+}
+
+function createShowsDroplist (showList) {
+  return showList.sort((a, b) => a.name.localeCompare(b.name))
+  .map(show => {
+    const select = document.querySelector("#showsDroplist");
+
+    const option = document.createElement("option");
+    option.value = show.id;
+    option.textContent = show.name;
+    
+    select.appendChild(option);
+  });
 }
 
 // ----------
@@ -98,16 +99,14 @@ function createEpisodesDropList (episodeList) {
 const input = document.querySelector("#input");
 input.addEventListener("input", () => searchEpisodeByKeyword(input.value));
 
-const select = document.querySelector("select");
-select.addEventListener("change", () => {
+const selectEpisodes = document.querySelector("#episodesDroplist");
+selectEpisodes.addEventListener("change", () => {
   const rootElem = document.getElementById("root");
   rootElem.replaceChildren();
 
   const filteredEpisode = allEpisodesArray.filter(episode => {
-    const episodeId = `${episode.number < 10
-      ? "S0"+episode.season+"E0"+episode.number 
-      : "S0"+episode.season+"E"+episode.number}`;
-    return episodeId === select.value;
+    const episodeId = setSeasonAndEpisodeNumber(episode.season, episode.number);
+    return episodeId === selectEpisodes.value;
   })
   makePageForEpisodes(filteredEpisode);
 })
@@ -117,10 +116,25 @@ returnAllEpisodesButton.addEventListener("click", () => {
   const rootElem = document.getElementById("root");
   rootElem.replaceChildren();
 
-  select.value = "disabledOption";
+  selectEpisodes.value = setSeasonAndEpisodeNumber(allEpisodesArray[0].season, allEpisodesArray[0].number);
   input.value = "";
 
   makePageForEpisodes(allEpisodesArray);
+})
+
+const selectShows = document.querySelector("#showsDroplist")
+selectShows.addEventListener("change", () => {
+  const rootElem = document.getElementById("root");
+  rootElem.replaceChildren();
+
+  allEpisodesArray = fetchEpisodesData(selectShows.value)
+    .then(() => {
+      makePageForEpisodes(allEpisodesArray);
+      createEpisodesDropList(allEpisodesArray);
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    });
 })
 
 // The way to move through page to selected episode

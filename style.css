@@ -29,21 +29,33 @@ body {
   padding: 1em;
 }
 
-#search {
+#navigation {
+  display: flex;
   margin: 1%;
   margin-top: 2%;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-#search select, button, input {
-  padding: 0.8em;
+#navigation select, button, input {
+  padding: 1em;
   border-color: rgb(209, 202, 202);
   border-radius: 0.5em;
 }
 
-#search label {
+#navigation button {
+  height: 3.2em;
+  align-self: flex-end;
+  margin-bottom: 0.3em;
+}
+
+#navigation label {
   color: rgb(83, 82, 82);
-  margin-left: 1em;
+}
+
+.select-group {
+  display: flex;
+  flex-direction: column;
+  margin-right: 1em;
 }
 
 /* #search select {

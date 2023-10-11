@@ -9,13 +9,21 @@
   </head>
 
   <body>
-    <div id="search">
-      <select name="episodes">
-        <option value="disabledOption" disabled="true" selected="true">Select episode...</option>
-      </select>
-      <button id="returnAllEpisodes">All episodes</button>
-      <input type="text" id="input" placeholder="Search...">
-      <label for="input"></label>
+    <div id="navigation">
+      <div class="select-group">
+        <label for="showsDroplist">Select Show</label>
+        <select name="shows" id="showsDroplist"></select>
+      </div>
+      
+      <div class="select-group">
+        <label for="episodesDroplist">Select Episode</label>
+        <select name="episodes" id="episodesDroplist"></select>
+      </div>
+      <div class="select-group">
+        <label for="input" id="inputLabel"></label>
+        <input type="text" id="input" placeholder="Search...">
+      </div>
+      <button id="returnAllEpisodes">Show All Episodes</button>
     </div>
     
     <div id="root">
@@ -25,6 +33,7 @@
 
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="data/episodes.js"></script>
+    <script src="data/shows.js"></script>
 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
