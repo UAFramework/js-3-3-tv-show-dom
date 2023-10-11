@@ -1,9 +1,26 @@
 window.onload = setup;
 
 function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
-  createEpisodesDropList(allEpisodes);
+  fetchEpisodesData()
+    .then(() => {
+      makePageForEpisodes(allEpisodesArray);
+      createEpisodesDropList(allEpisodesArray);
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    });
+}
+
+let allEpisodesArray;
+async function fetchEpisodesData() {
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows/82/episodes");
+    allEpisodesArray = await response.json();
+    return allEpisodesArray;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
 }
 
 function makePageForEpisodes(episodeList) {
@@ -31,7 +48,7 @@ function makePageForEpisodes(episodeList) {
     rootElem.appendChild(div);
 
     const label = document.querySelector("label");
-    label.textContent = `Displaying ${episodeList.length}/${getAllEpisodes().length} episodes`;
+    label.textContent = `Displaying ${episodeList.length}/${allEpisodesArray.length} episodes`;
   })
 }
 
@@ -41,12 +58,12 @@ function searchEpisodeByKeyword (value) {
 
   const label = document.querySelector("label");
 
-  const filteredEpisodes = getAllEpisodes().filter(episode =>
+  const filteredEpisodes = allEpisodesArray.filter(episode =>
     episode.name.toLowerCase().includes(value.toLowerCase()) || episode.summary.toLowerCase().includes(value.toLowerCase())
   );
 
   return makePageForEpisodes(filteredEpisodes),
-  label.textContent = `Displaying ${filteredEpisodes.length}/${getAllEpisodes().length} episodes`;
+  label.textContent = `Displaying ${filteredEpisodes.length}/${allEpisodesArray.length} episodes`;
 }
 
 function createEpisodesDropList (episodeList) {
@@ -86,8 +103,7 @@ select.addEventListener("change", () => {
   const rootElem = document.getElementById("root");
   rootElem.replaceChildren();
 
-  const allEpisodes = getAllEpisodes();
-  const filteredEpisode = allEpisodes.filter(episode => {
+  const filteredEpisode = allEpisodesArray.filter(episode => {
     const episodeId = `${episode.number < 10
       ? "S0"+episode.season+"E0"+episode.number 
       : "S0"+episode.season+"E"+episode.number}`;
@@ -104,8 +120,7 @@ returnAllEpisodesButton.addEventListener("click", () => {
   select.value = "disabledOption";
   input.value = "";
 
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
+  makePageForEpisodes(allEpisodesArray);
 })
 
 // The way to move through page to selected episode
