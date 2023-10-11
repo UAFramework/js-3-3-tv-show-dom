@@ -1,15 +1,18 @@
 //You can edit ALL of the code here
+const rootDiv = document.getElementById("root");
+const episodes = getAllEpisodes();
+var filteredEpisodes = episodes;
+const searchInput = document.getElementById("search");
+
 function formatEpisodeCode(season, episode) {
   return `S${season.toString().padStart(2, "0")}E${episode
     .toString()
     .padStart(2, "0")}`;
 }
 
-function setup() {
-  const rootDiv = document.getElementById("root");
-  const allEpisodes = getAllEpisodes();
-
-  allEpisodes.forEach((episode) => {
+function showEpisodes(episodes) {
+  rootDiv.innerHTML = "";
+  episodes.forEach((episode) => {
     const episodeCode = formatEpisodeCode(episode.season, episode.number);
     const episodeName = episode.name;
     const episodeImage = episode.image.medium;
@@ -26,4 +29,28 @@ function setup() {
   });
 }
 
-window.onload = setup;
+function showEpisodesCount(episodes, filtered) {
+  const episodesCountDiv = document.getElementById("episodes-count");
+  episodesCountDiv.innerHTML = `Displaying ${filtered.length}/${episodes.length} episodes`;
+
+}
+
+searchInput.addEventListener("input", function () {
+  const searchText = searchInput.value.toLowerCase();
+  filteredEpisodes = episodes.filter((episode) => {
+    return (
+      episode.name.toLowerCase().includes(searchText) ||
+      episode.summary.toLowerCase().includes(searchText)
+    );
+  });
+
+  showEpisodes(filteredEpisodes);
+  showEpisodesCount(episodes, filteredEpisodes);
+});
+
+function preparePage() {
+  showEpisodes(episodes);
+  showEpisodesCount(episodes, filteredEpisodes);
+}
+
+window.onload = preparePage;
