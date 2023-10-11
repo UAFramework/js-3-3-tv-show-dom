@@ -32,17 +32,28 @@ body {
 #search {
   margin: 1%;
   margin-top: 2%;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-#input {
+#search select, button, input {
   padding: 0.8em;
   border-color: rgb(209, 202, 202);
   border-radius: 0.5em;
-
 }
 
 #search label {
   color: rgb(83, 82, 82);
   margin-left: 1em;
-  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+
+/* #search select {
+  padding: 0.8em;
+  border-color: rgb(209, 202, 202);
+  border-radius: 0.5em;
+}
+
+#search button {
+  padding: 0.8em;
+  border-color: rgb(209, 202, 202);
+  border-radius: 0.5em;
+} */
