@@ -1,10 +1,14 @@
 //You can edit ALL of the code here
 const rootDiv = document.getElementById("root");
+const searchInput = document.getElementById("search");
+const movieSelect = document.getElementById("movie-select");
+const select = document.getElementById("select");
+const allValue = "All";
+const shows = getAllShows();
+
+let defaultUrl = `https://api.tvmaze.com/shows/${shows[0].id}/episodes`;
 let episodes = [];
 let filteredEpisodes = [];
-const searchInput = document.getElementById("search");
-const select = document.getElementById("select");
-const allValue = 'All';
 
 function formatEpisodeCode(season, episode) {
   return `S${season.toString().padStart(2, "0")}E${episode
@@ -37,6 +41,7 @@ function showEpisodesCount(episodes, filtered) {
 }
 
 function fillSelect() {
+  select.innerHTML = "";
   let option = document.createElement("option");
   option.text = allValue;
   option.value = allValue;
@@ -48,6 +53,19 @@ function fillSelect() {
     option.text = `${episodeCode} - ${episode.name}`;
     option.value = episodeCode;
     select.add(option);
+  });
+}
+
+function fillMovieSelect(movieSelectedValue = null) {
+  movieSelect.innerHTML = "";
+  shows.map((movie) => {
+    let option = document.createElement("option");
+    option.text = movie.name;
+    option.value = movie.id;
+    if (movieSelectedValue && movieSelectedValue == movie.id) {
+      option.selected = true;
+    }
+    movieSelect.add(option);
   });
 }
 
@@ -72,7 +90,9 @@ select.addEventListener("change", function () {
     filteredEpisodes = episodes;
   } else {
     filteredEpisodes = episodes.filter((episode) => {
-      return targetSectionId === formatEpisodeCode(episode.season, episode.number);
+      return (
+        targetSectionId === formatEpisodeCode(episode.season, episode.number)
+      );
     });
   }
 
@@ -80,22 +100,23 @@ select.addEventListener("change", function () {
   showEpisodesCount(episodes, filteredEpisodes);
 });
 
-function preparePage() {
+movieSelect.addEventListener("change", function () {
+  let selectedOption = movieSelect.options[movieSelect.selectedIndex];
+  let targetId = selectedOption.value;
+  let url = `https://api.tvmaze.com/shows/${targetId}/episodes`;
+
+  fetchData(url, targetId);
+});
+
+function preparePage(movieSelectedValue = null) {
   showEpisodes(episodes);
   showEpisodesCount(episodes, filteredEpisodes);
+  fillMovieSelect(movieSelectedValue);
   fillSelect();
 }
 
-let url = "https://api.tvmaze.com/shows/82/episodes";
-// let url = "https://api.tvmaze.com/shows/527/episodes";
-// let url = "https://api.tvmaze.com/shows/22036/episodes";
-// let url = "https://api.tvmaze.com/shows/5/episodes";
-// let url = "https://api.tvmaze.com/shows/582/episodes"; // did not work
-// let url = "https://api.tvmaze.com/shows/179/episodes";
-// let url = "https://api.tvmaze.com/shows/379/episodes";
-// let url = "https://api.tvmaze.com/shows/4729/episodes"; // did not work
-
-fetch(url)
+function fetchData(url, movieSelectedValue = null) {
+  fetch(url)
   .then((response) => {
     if (!response.ok) {
       throw new Error("Network problems");
@@ -105,8 +126,11 @@ fetch(url)
   .then((data) => {
     episodes = data;
     filteredEpisodes = episodes;
-    preparePage();
+    preparePage(movieSelectedValue);
   })
   .catch((error) => {
     console.error("Error fetching data:", error);
   });
+}
+
+window.onload = fetchData(defaultUrl);
