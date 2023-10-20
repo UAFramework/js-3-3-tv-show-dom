@@ -20,7 +20,19 @@ body {
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
 }
 
-.episode h3 {
+.season {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column-reverse;
+  flex: 1 0 25%;
+  margin: 1%;
+  text-align: center;
+  border-radius: 0.5em;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 1);
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+
+.episode h3, .season h3 {
   order: 1;
   margin: 0;
   margin-bottom: 1em;
@@ -36,9 +48,24 @@ body {
   order: 1;
 }
 
+.season p {
+  color: rgb(88, 88, 88);
+  padding: 1em;
+}
+
 .episode img {
+  width: 15.63rem;
+  height: 8.75rem;
+}
+
+.episode img, .season img {
   margin: 1em;
   align-self: center;
+}
+
+.show img, .season img {
+  width: 13.13rem;
+  height: 18.44rem;
 }
 
 #navigation {
@@ -126,7 +153,20 @@ label[for="input"] {
   max-height: 100%;
 }
 
-.show h2:hover {
+.show h2:hover, .season h3:hover {
   color:rgb(86, 86, 224);
   cursor: pointer;
+}
+
+#seasonsDroplist {
+  display: none;
+}
+
+label[for="seasonsDroplist"] {
+  display: none;
+}
+
+#showHead {
+  font-size: 4em;
+  text-align: center;
 }
