@@ -117,8 +117,6 @@ function makePageForShows (showList) {
       selectSeasons.style.display = "block";
       document.querySelector(`label[for="${selectSeasons.id}"]`).style.display = "block";
 
-      rootElem.replaceChildren();
-
       const showHead = document.querySelector("#showHead");
       showHead.textContent = show.name;
 
@@ -138,13 +136,62 @@ function makePageForShows (showList) {
     const p = document.createElement("p");
     p.innerHTML = show.summary;
 
+    const castList = document.createElement("div");
+    castList.classList.add("castList");
+
+    const showCast = document.createElement("p");
+    showCast.textContent = "Show cast";
+    castList.appendChild(showCast);
+
+    const showCastClickListener = () => {
+      showCast.removeEventListener("click", showCastClickListener);
+      showCast.textContent = "*click on actor's name to display all shows in which he/she appeared";
+      showCast.classList.add('disabled-hover');
+
+      fetchCastData(show.id)
+      .then(() => {
+        castForSpecificShow.map((actor, index) => {
+          const actorSpan = document.createElement("span");
+          index !== castForSpecificShow.length - 1 ?
+            actorSpan.textContent = `${actor.person.name}, ` :
+            actorSpan.textContent = actor.person.name;
+
+          actorSpan.addEventListener("click", () => {
+            fetchShowsWhereAppearedActor(actor.person.id)
+            .then(() => {
+              let arrayOfShowsId = showsWhereAppearedActor.map(show => {
+                const partsOfUrl = show["_links"].show.href.split("/");
+                return +partsOfUrl[partsOfUrl.length - 1];
+              });
+              const allShows = getAllShows();
+              let filteredShows = allShows.filter(show => arrayOfShowsId.includes(show.id));
+              makePageForShows(filteredShows);
+              createShowsDroplist(filteredShows);
+              const showHead = document.querySelector("#showHead");
+              showHead.textContent = `Shows with ${actor.person.name}`;
+            })
+            .catch(error => {
+              console.error("Error:", error);
+            });
+          });
+
+          castList.appendChild(actorSpan);
+        });
+      })
+      .catch(error => {
+        console.error("Error:", error);
+      });
+    }
+
+    showCast.addEventListener("click", showCastClickListener);
+    
     const asideBlock = document.createElement("aside");
     asideBlock.innerHTML = `<b>Rated:</b> ${show.rating.average}
       <br><br><b>Genres</b>: ${show.genres.join(" | ")}
       <br><br><b>Status</b>: ${show.status}
       <br><br><b>Runtime</b>: ${show.runtime}`;
 
-    div.append(h2, img, p, asideBlock);
+    div.append(h2, img, p, asideBlock, castList);
     rootElem.appendChild(div);
   })
 }
@@ -168,6 +215,30 @@ async function fetchSeasonesData(showId) {
     const response = await fetch(`https://api.tvmaze.com/shows/${showId}/seasons`);
     allSeasonsArray = await response.json();
     return allSeasonsArray;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+let castForSpecificShow;
+async function fetchCastData(showId) {
+  try {
+    const response = await fetch(`https://api.tvmaze.com/shows/${showId}/cast`);
+    castForSpecificShow = await response.json();
+    return castForSpecificShow;
+  } catch (error) {
+    console.error("Error:", error);
+    throw error;
+  }
+}
+
+let showsWhereAppearedActor;
+async function fetchShowsWhereAppearedActor(actorId) {
+  try {
+    const response = await fetch(`https://api.tvmaze.com/people/${actorId}/castcredits`);
+    showsWhereAppearedActor = await response.json();
+    return showsWhereAppearedActor;
   } catch (error) {
     console.error("Error:", error);
     throw error;
@@ -276,7 +347,7 @@ returnAllShowsButton.addEventListener("click", () => {
   document.querySelector(`label[for="${selectSeasons.id}"]`).style.display = "none";
 
   const showHead = document.querySelector("#showHead");
-  showHead.textContent = "";
+  showHead.textContent = "List of All Shows";
   
   makePageForShows(getAllShows());
   createShowsDroplist(getAllShows());
