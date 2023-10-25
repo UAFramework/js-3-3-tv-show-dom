@@ -134,7 +134,38 @@ function makePageForShows (showList) {
     img.src = show.image ? show.image.medium : "https://westsiderc.org/wp-content/uploads/2019/08/Image-Not-Available.png";
 
     const p = document.createElement("p");
-    p.innerHTML = show.summary;
+    if (show.summary.length > 200) {
+      const shortSummary = show.summary.slice(0, 200);
+      const secontPartSummary = show.summary.slice(200);
+
+      p.innerHTML = shortSummary + "...";
+      
+      const readMore = document.createElement("span");
+      readMore.textContent = "Read more";
+      readMore.classList.add("readMore");
+
+      function readMoreEventHandler () {
+        p.innerHTML = shortSummary + secontPartSummary;
+        readMore.textContent = "Read less";
+        p.appendChild(readMore);
+        readMore.removeEventListener("click", readMoreEventHandler);
+        readMore.addEventListener("click", readLessEventHandler);
+      }
+
+      function readLessEventHandler () {
+        p.innerHTML = shortSummary + "...";
+        readMore.textContent = "Read more";
+        p.appendChild(readMore);
+        readMore.removeEventListener("click", readLessEventHandler);
+        readMore.addEventListener("click", readMoreEventHandler);
+      }
+
+      readMore.addEventListener("click", readMoreEventHandler);
+      
+      p.appendChild(readMore);
+    } else {
+        p.innerHTML = show.summary;
+    }
 
     const castList = document.createElement("div");
     castList.classList.add("castList");
@@ -294,7 +325,7 @@ function createSeasonesDropList (seasonList) {
     option.textContent = `Season ${season.number}`;
     
     select.appendChild(option);
-    });
+  });
 }
 
 // ----------
@@ -316,10 +347,10 @@ selectEpisodes.addEventListener("change", () => {
 
 const returnAllEpisodesButton = document.querySelector("#returnAllEpisodes");
 returnAllEpisodesButton.addEventListener("click", () => {
-    selectEpisodes.value = allEpisodesArray[0].id;
-    input.value = "";
-    makePageForEpisodes(allEpisodesArray);
-    createEpisodesDropList(allEpisodesArray);
+  selectEpisodes.value = allEpisodesArray[0].id;
+  input.value = "";
+  makePageForEpisodes(allEpisodesArray);
+  createEpisodesDropList(allEpisodesArray);
 });
 
 const selectShows = document.querySelector("#showsDroplist");
@@ -369,3 +400,12 @@ selectSeasons.addEventListener("change", () => {
       });
   }
 });
+
+// const sortByRatingButton = document.querySelector("#sortByRatingButton");
+// sortByRatingButton.addEventListener("click", () => {
+//   const allShows = getAllShows();
+//   const sortedShows = allShows.sort((showA, showB) => (showB.rating.average - showA.rating.average));
+//   console.log(sortedShows);
+//   makePageForShows(sortedShows);
+//   createShowsDroplist(sortedShows);
+// });

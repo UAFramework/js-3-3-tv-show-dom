@@ -164,7 +164,8 @@ label[for="input"] {
 .show h2:hover,
 .season h3:hover,
 .castList p:hover,
-.castList span:hover {
+.castList span:hover,
+.readMore:hover {
   color: rgb(86, 86, 224);
   cursor: pointer;
 }
@@ -179,7 +180,7 @@ label[for="input"] {
 }
 
 .castList p.disabled-hover:hover {
-  color: rgb(88, 88, 88);;
+  color: rgb(88, 88, 88);
   cursor: default;
 }
 
@@ -204,4 +205,12 @@ label[for="seasonsDroplist"] {
   font-size: 3em;
   text-align: center;
   padding: 1rem;
+}
+
+.readMore {
+  margin: 1em;
+  border-radius: 1em;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+  padding: 0.5em;
+  color: black;
 }
