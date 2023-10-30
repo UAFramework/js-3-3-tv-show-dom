@@ -2,8 +2,10 @@ window.onload = setup;
 
 function setup() {
   const allShows = getAllShows();
-  makePageForShows(allShows);
-  createShowsDroplist(allShows);
+  const slicedArray = sliceArrayForPage (1, allShows);
+  makePageForShows(slicedArray);
+  createShowsDroplist(slicedArray);
+  setPagination (allShows);
 }
 
 let options = {
@@ -83,8 +85,7 @@ function createShowsDroplist (showList) {
   const select = document.querySelector("#showsDroplist");
   select.replaceChildren();
 
-  return showList.sort((a, b) => a.name.localeCompare(b.name))
-  .map(show => {
+  return showList.map(show => {
     const option = document.createElement("option");
     option.value = show.id;
     option.textContent = show.name;
@@ -97,8 +98,7 @@ function makePageForShows (showList) {
   const rootElem = document.getElementById("root");
   rootElem.replaceChildren();
 
-  return showList.sort((a, b) => a.name.localeCompare(b.name))
-  .map(show => {
+  return showList.map(show => {
     const div = document.createElement("div");
     div.classList.add("show");
 
@@ -111,11 +111,14 @@ function makePageForShows (showList) {
       selectShows.style.display = "none";
       document.querySelector(`label[for="${selectShows.id}"]`).style.display = "none";
       document.querySelector(`label[for="${input.id}"]`).style.display = "none";
-      returnAllEpisodesButton.style.visibility = "hidden";
       input.style.display = "none";
       input.value = "";
       selectSeasons.style.display = "block";
       document.querySelector(`label[for="${selectSeasons.id}"]`).style.display = "block";
+      loadMoreButton.style.display = "none"
+
+      const paginationContainer = document.querySelector("#pagination");
+      paginationContainer.replaceChildren();
 
       const showHead = document.querySelector("#showHead");
       showHead.textContent = show.name;
@@ -188,6 +191,8 @@ function makePageForShows (showList) {
             actorSpan.textContent = actor.person.name;
 
           actorSpan.addEventListener("click", () => {
+            const paginationContainer = document.querySelector("#pagination");
+            paginationContainer.replaceChildren();
             fetchShowsWhereAppearedActor(actor.person.id)
             .then(() => {
               let arrayOfShowsId = showsWhereAppearedActor.map(show => {
@@ -230,14 +235,19 @@ function makePageForShows (showList) {
 function searchShowByKeyword (value) {
   const rootElem = document.getElementById("root");
   rootElem.replaceChildren();
+  const paginationContainer = document.querySelector("#pagination");
+  paginationContainer.replaceChildren();
 
   const filteredShows = getAllShows().filter(show =>
-    show.name.toLowerCase().includes(value.toLowerCase()) 
+    show.name.toLowerCase().includes(value.toLowerCase())
     || show.summary.toLowerCase().includes(value.toLowerCase())
     || show.genres.join(" ").toLowerCase().includes(value.toLowerCase())
   );
+  const slicedArray = sliceArrayForPage(pageOptions.currentPage, filteredShows)
 
-  return makePageForShows(filteredShows), createShowsDroplist(filteredShows);
+  makePageForShows(slicedArray),
+  createShowsDroplist(slicedArray),
+  setPagination (filteredShows);
 }
 
 let allSeasonsArray;
@@ -292,7 +302,9 @@ function makePageForSeasons (seasonList) {
     h3.addEventListener("click", () => {
       options.isDisplayedSeasons = false;
       options.isDisplayedEpisodes = true;
+      document.querySelector(`label[for="${input.id}"]`).style.display = "block";
       document.querySelector(`label[for="${input.id}"]`).style.visibility = "visible";
+      input.style.display = "block";
       returnAllEpisodesButton.style.visibility = "visible";
       input.value = "";
       selectSeasons.value = season.id;
@@ -328,6 +340,49 @@ function createSeasonesDropList (seasonList) {
   });
 }
 
+let pageOptions = {
+  itemsPerPage: 15,
+  currentPage: 1
+}
+function sliceArrayForPage (currentPage, items) {
+  const startIndex = (currentPage - 1) * pageOptions.itemsPerPage;
+  const endIndex = startIndex + pageOptions.itemsPerPage;
+  return items.slice(startIndex, endIndex);
+}
+
+function setPagination (arr) {
+  const paginationContainer = document.querySelector("#pagination");
+  const totalPages = Math.ceil(arr.length / pageOptions.itemsPerPage);
+
+  for (let i = 1; i <= totalPages; i++) {
+    const paginationItem = document.createElement("span");
+    paginationItem.textContent = i;
+    paginationItem.classList.add("pageButton");
+    
+    if (i === pageOptions.currentPage) {
+      paginationItem.classList.add("activePageButton");
+    }
+
+    paginationItem.addEventListener("click", () => {
+      const previousActivePages = paginationContainer.querySelectorAll(".activePageButton");
+      if (previousActivePages) {
+        previousActivePages.forEach(element => {
+          element.classList.remove("activePageButton");
+        });
+      }
+
+      pageOptions.currentPage = i;
+      const slicedArray = sliceArrayForPage(i, getAllShows());
+      makePageForShows (slicedArray);
+      createShowsDroplist (slicedArray);
+      paginationItem.classList.add("activePageButton");
+
+    });
+
+    paginationContainer.appendChild(paginationItem);
+  }
+}
+
 // ----------
 // Adding event listeners
 const input = document.querySelector("#input");
@@ -355,6 +410,8 @@ returnAllEpisodesButton.addEventListener("click", () => {
 
 const selectShows = document.querySelector("#showsDroplist");
 selectShows.addEventListener("change", () => {
+  const paginationContainer = document.querySelector("#pagination");
+  paginationContainer.replaceChildren();
   const filteredShow = getAllShows().filter(show => show.id === +selectShows.value);
 
   makePageForShows(filteredShow);
@@ -366,22 +423,28 @@ returnAllShowsButton.addEventListener("click", () => {
   selectShows.style.display = "block";
   selectShows.value = getAllShows().sort((a, b) => a.name.localeCompare(b.name))[0].id;
   options.isDisplayedShows = true;
+  options.isDisplayedSeasons = false;
   options.isDisplayedEpisodes = false;
+  pageOptions.currentPage = 1;
   document.querySelector(`label[for="${selectShows.id}"]`).style.display = "block";
   document.querySelector(`label[for="${input.id}"]`).style.visibility = "hidden";
+  document.querySelector(`label[for="${input.id}"]`).style.display = "block";
   document.querySelector(`label[for="${selectEpisodes.id}"]`).style.display = "none";
   selectEpisodes.style.display = "none";
   returnAllEpisodesButton.style.visibility = "hidden";
   input.style.display = "block";
-  document.querySelector(`label[for="${input.id}"]`).style.display = "block";
   selectSeasons.style.display = "none";
   document.querySelector(`label[for="${selectSeasons.id}"]`).style.display = "none";
+  loadMoreButton.style.display = "block"
 
   const showHead = document.querySelector("#showHead");
   showHead.textContent = "List of All Shows";
   
-  makePageForShows(getAllShows());
-  createShowsDroplist(getAllShows());
+  const allShows = getAllShows();
+  const slicedArray = sliceArrayForPage (1, allShows);
+  makePageForShows(slicedArray);
+  createShowsDroplist(slicedArray);
+  setPagination (allShows);
 });
 
 const selectSeasons = document.querySelector("#seasonsDroplist");
@@ -401,11 +464,19 @@ selectSeasons.addEventListener("change", () => {
   }
 });
 
-// const sortByRatingButton = document.querySelector("#sortByRatingButton");
-// sortByRatingButton.addEventListener("click", () => {
-//   const allShows = getAllShows();
-//   const sortedShows = allShows.sort((showA, showB) => (showB.rating.average - showA.rating.average));
-//   console.log(sortedShows);
-//   makePageForShows(sortedShows);
-//   createShowsDroplist(sortedShows);
-// });
+const loadMoreButton = document.querySelector("#loadMoreButton");
+loadMoreButton.addEventListener("click", () => {
+  const spanElements = document.querySelectorAll(".pageButton");
+
+  const activeSpan = spanElements[pageOptions.currentPage - 1];
+  activeSpan.classList.add("activePageButton");
+
+  const loadedSpan = spanElements[pageOptions.currentPage];
+  loadedSpan.classList.add("activePageButton");
+
+  const concatedPages = sliceArrayForPage(pageOptions.currentPage, getAllShows()).concat(sliceArrayForPage(pageOptions.currentPage++, getAllShows()));
+  
+  
+  makePageForShows (concatedPages);
+  createShowsDroplist (concatedPages);
+});

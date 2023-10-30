@@ -214,3 +214,39 @@ label[for="seasonsDroplist"] {
   padding: 0.5em;
   color: black;
 }
+
+#pagination {
+  text-align: center;
+  margin: 2em;
+}
+
+#pagination span {
+  padding: 1em;
+  margin: 0.5em;
+  border-radius: 0.5em;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.activePageButton {
+  background-color: rgb(182, 182, 182);
+}
+
+#paginationContainer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+#loadMoreButton {
+  align-self: center;
+  margin: 0.5em;
+  padding: 1em;
+  background-color: rgb(204, 203, 203);
+  border-radius: 0.5em;
+}
+
+#loadMoreButton:hover,
+#pagination span:hover {
+  background-color: antiquewhite;
+  cursor: pointer;
+}
