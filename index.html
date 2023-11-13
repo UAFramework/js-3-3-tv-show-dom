@@ -3,17 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | My Name (My GitHub username)</title>
+    <title>TV Show Project | Denis (DenisDudar)</title>
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
 
   <body>
-    <div id="root">
+    <div id="navigation">
+      <div class="select-group">
+        <label for="showsDroplist">Select Show</label>
+        <select name="shows" id="showsDroplist"></select>
+      </div>
+      <div class="select-group">
+        <label for="seasonsDroplist">Select Season</label>
+        <select name="seasons" id="seasonsDroplist"></select>
+      </div>
+      <div class="select-group">
+        <label for="episodesDroplist">Select Episode</label>
+        <select name="episodes" id="episodesDroplist"></select>
+      </div>
+      <div class="select-group">
+        <label for="input">HiddenText</label>
+        <input type="text" id="input" placeholder="Search...">
+      </div>
+      <button id="returnAllShows">Return to All Shows</button>
+      <button id="returnAllEpisodes">Return to All Episodes</button>
     </div>
+    <div id="showHead">List of All Shows</div>
+    
+    <div id="root">
+      
+    </div>
+    <div id="paginationContainer">
+      <button id="loadMoreButton">Load More</button>
+      <div id="pagination"></div>
+    </div>
+    <footer>Data got from <a href="https://tvmaze.com/" target="_blank">TVMaze.com</a></footer>
 
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="data/episodes.js"></script>
+    <script src="data/shows.js"></script>
 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
