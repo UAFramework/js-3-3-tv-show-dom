@@ -52,3 +52,14 @@ body {
   margin: 10px;
   text-align: left;
 }
+
+#searchInput {
+  width: 25em;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#searchCount {
+  margin-top: 10px;
+  color: #333;
+}

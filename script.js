@@ -2,6 +2,10 @@
 function setup() {
   const allEpisodes = getAllEpisodes();
   makePageForEpisodes(allEpisodes);
+
+  // Add event listener for search input
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", handleSearch);
 }
 
 function makePageForEpisodes(episodeList) {
@@ -30,6 +34,27 @@ function displayEpisode(episode) {
 
   const rootElem = document.getElementById("root");
   rootElem.appendChild(listItem);
+}
+
+function handleSearch() {
+  const searchInput = document.getElementById("searchInput");
+  const searchTerm = searchInput.value.toLowerCase();
+
+  const filteredEpisodes = getAllEpisodes().filter((episode) => {
+    const episodeName = episode.name.toLowerCase();
+    const episodeSummary = episode.summary.toLowerCase();
+    return (
+      episodeName.includes(searchTerm) || episodeSummary.includes(searchTerm)
+    );
+  });
+
+  makePageForEpisodes(filteredEpisodes);
+  updateSearchCount(filteredEpisodes.length);
+}
+
+function updateSearchCount(count) {
+  const searchCountElem = document.getElementById("searchCount");
+  searchCountElem.textContent = `Matching episodes: ${count}`;
 }
 
 window.onload = setup;
