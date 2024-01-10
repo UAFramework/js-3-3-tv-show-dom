@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #605e5e;
+  background-color: #4f2416;
   background-image: url("");
   background-size: cover;
   background-position: center;
@@ -12,7 +12,7 @@ body {
   max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #605e5e;
+  background-color: #c9a66b;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -21,18 +21,18 @@ body {
 
 .episode-item {
   list-style: none;
-  border: 1px solid #cccccc;
-  border-radius: 5px;
   overflow: hidden;
-  background-color: #fff;
-  text-align: center;
+  background-color: #e0d1a8;
+  border: 1px solid #332626;
+  padding: 15px;
+  text-align: justify;
 }
 
 .episode-title {
-  background-color: rgb(172, 171, 170);
+  background-color: #af4425;
   font-size: 1.2em;
   margin: 10px;
-  color: #100f0f;
+  color: #340404;
   border: 1px solid #ccc;
   padding: 10px;
   border-radius: 5px;
@@ -47,15 +47,8 @@ body {
   margin: 0 auto;
 }
 
-.episode-summary {
-  padding: 10px;
-  color: #666;
-  margin: 10px;
-  text-align: left;
-}
-
 .source-link {
-  color: #666666;
+  color: #2c140c;
   margin: 10px;
   text-align: left;
 }
