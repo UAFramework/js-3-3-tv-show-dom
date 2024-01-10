@@ -9,6 +9,9 @@
   </head>
 
   <body>
+    <select id="episodeSelect" onchange="handleSelectChange()">
+      <option value="-1">Select an episode</option>
+    </select>
     <input
       type="text"
       id="searchInput"
@@ -18,7 +21,6 @@
     <div id="root" class="container"></div>
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="data/episodes.js"></script>
-
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
   </body>

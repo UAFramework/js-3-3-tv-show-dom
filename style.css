@@ -2,7 +2,7 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #4f2416;
+  background-color: #343333;
   background-image: url("");
   background-size: cover;
   background-position: center;
@@ -12,7 +12,7 @@ body {
   max-width: 1200px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #c9a66b;
+  background-color: #3e3e3d;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -22,35 +22,37 @@ body {
 .episode-item {
   list-style: none;
   overflow: hidden;
-  background-color: #e0d1a8;
-  border: 1px solid #332626;
-  padding: 15px;
+  background-color: #fefefe;
+  border: 2px solid #332626;
+  padding: 20px;
   text-align: justify;
+  position: relative;
 }
 
 .episode-title {
-  background-color: #af4425;
   font-size: 1.2em;
+  background-color: #e6e2e2;
   margin: 10px;
-  color: #340404;
-  border: 1px solid #ccc;
+  color: #0b0b0b;
   padding: 10px;
   border-radius: 5px;
   text-align: center;
 }
 
 .episode-image {
-  max-width: 100%;
-  height: auto;
-  border-bottom: 1px solid #ccc;
+  width: 100%;
+  object-fit: cover;
   display: block;
-  margin: 0 auto;
 }
 
 .source-link {
   color: #2c140c;
-  margin: 10px;
-  text-align: left;
+  margin: 15px;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 #searchInput {
@@ -62,4 +64,21 @@ body {
 #searchCount {
   margin-top: 10px;
   color: #333;
+}
+
+#episodeSelect {
+  width: 25em;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#searchCount {
+  margin-top: 10px;
+  color: #333;
+}
+
+@media screen and (max-width: 600px) {
+  .episode-title {
+    font-size: 1em;
+  }
 }
