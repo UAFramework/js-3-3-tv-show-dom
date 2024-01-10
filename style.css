@@ -1,3 +1,84 @@
-#root {
-  color: red;
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #343333;
+  background-image: url("");
+  background-size: cover;
+  background-position: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #3e3e3d;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.episode-item {
+  list-style: none;
+  overflow: hidden;
+  background-color: #fefefe;
+  border: 2px solid #332626;
+  padding: 20px;
+  text-align: justify;
+  position: relative;
+}
+
+.episode-title {
+  font-size: 1.2em;
+  background-color: #e6e2e2;
+  margin: 10px;
+  color: #0b0b0b;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.episode-image {
+  width: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.source-link {
+  color: #2c140c;
+  margin: 15px;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#searchInput {
+  width: 25em;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#searchCount {
+  margin-top: 10px;
+  color: #333;
+}
+
+#episodeSelect {
+  width: 25em;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+#searchCount {
+  margin-top: 10px;
+  color: #333;
+}
+
+@media screen and (max-width: 600px) {
+  .episode-title {
+    font-size: 1em;
+  }
 }
